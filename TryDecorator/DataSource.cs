@@ -115,4 +115,25 @@ namespace TryDecorator
             Console.WriteLine("Write Data End.");
         }
     }
+
+    public class EmailDecorator : IDataSource
+    {
+        private readonly IDataSource _dataSource;
+
+        public EmailDecorator(IDataSource dataSource)
+        {
+            _dataSource = dataSource;
+        }
+
+        public void ReadData()
+        {
+            _dataSource.ReadData();
+        }
+
+        public void WriteData(string data)
+        {
+            _dataSource.WriteData(data);
+            Console.WriteLine($"Paycheck {data} sent.");
+        }
+    }
 }
