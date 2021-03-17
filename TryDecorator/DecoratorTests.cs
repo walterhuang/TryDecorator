@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Ninject;
 
 namespace TryDecorator
 {
@@ -35,6 +36,26 @@ namespace TryDecorator
             source.WriteData(salaryRecords);
             // The file has been written with compressed and
             // encrypted data.
+        }
+
+        [TestMethod]
+        public void TestDataSource_DependencyInjection()
+        {
+            // Arrange
+            var kernel = new StandardKernel();
+            kernel.Bind<IDataSource>().To<LoggingDecorator>();
+            kernel.Bind<IDataSource>().To<EncryptionDecorator>()
+                .WhenInjectedInto<LoggingDecorator>();
+            kernel.Bind<IDataSource>().To<CompressionDecorator>()
+                .WhenInjectedInto<EncryptionDecorator>();
+            kernel.Bind<IDataSource>().To<FileDataSource>()
+                .WhenInjectedInto<CompressionDecorator>()
+                .WithConstructorArgument("filename", "somefile.dat");
+            var target = kernel.Get<IDataSource>();
+            string salaryRecords = "$199/mo";
+
+            // Act
+            target.WriteData(salaryRecords);
         }
     }
 }

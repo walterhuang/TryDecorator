@@ -90,4 +90,29 @@ namespace TryDecorator
             Console.WriteLine("Decompress the data.");
         }
     }
+
+    // 5. Mutant Decorator
+    public class LoggingDecorator : IDataSource
+    {
+        private readonly IDataSource _dataSource;
+
+        public LoggingDecorator(IDataSource dataSource)
+        {
+            _dataSource = dataSource;
+        }
+
+        public void ReadData()
+        {
+            Console.WriteLine("Read Data Begin.");
+            _dataSource.ReadData();
+            Console.WriteLine("Read Data End.");
+        }
+
+        public void WriteData(string data)
+        {
+            Console.WriteLine("Write Data Begin.");
+            _dataSource.WriteData(data);
+            Console.WriteLine("Write Data End.");
+        }
+    }
 }
