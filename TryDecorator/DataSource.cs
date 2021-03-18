@@ -5,7 +5,7 @@ namespace TryDecorator
     // 1. Component
     public interface IDataSource
     {
-        void WriteData(string data);
+        string WriteData(string data);
 
         void ReadData();
     }
@@ -20,9 +20,10 @@ namespace TryDecorator
             _filename = filename;
         }
 
-        public void WriteData(string data)
+        public string WriteData(string data)
         {
             Console.WriteLine($"Write {data} to {_filename}");
+            return data;
         }
 
         public void ReadData()
@@ -41,9 +42,10 @@ namespace TryDecorator
             _wrappee = source;
         }
 
-        public virtual void WriteData(string data)
+        public virtual string WriteData(string data)
         {
-            _wrappee.WriteData(data);
+            data = _wrappee.WriteData(data);
+            return data;
         }
 
         public virtual void ReadData()
@@ -59,10 +61,11 @@ namespace TryDecorator
         {
         }
 
-        public override void WriteData(string data)
+        public override string WriteData(string data)
         {
             data = $"<encrypt>{data}</encrypt>";
-            base.WriteData(data);
+            data = base.WriteData(data);
+            return data;
         }
 
         public override void ReadData()
@@ -78,10 +81,11 @@ namespace TryDecorator
         {
         }
 
-        public override void WriteData(string data)
+        public override string WriteData(string data)
         {
             data = $"<compress>{data}</compress>";
-            base.WriteData(data);
+            data = base.WriteData(data);
+            return data;
         }
 
         public override void ReadData()
@@ -91,7 +95,7 @@ namespace TryDecorator
         }
     }
 
-    // 5. Mutant Decorator
+    // 5. Simple Decorator
     public class LoggingDecorator : IDataSource
     {
         private readonly IDataSource _dataSource;
@@ -108,11 +112,12 @@ namespace TryDecorator
             Console.WriteLine("Read Data End.");
         }
 
-        public void WriteData(string data)
+        public string WriteData(string data)
         {
             Console.WriteLine("Write Data Begin.");
-            _dataSource.WriteData(data);
+            data = _dataSource.WriteData(data);
             Console.WriteLine("Write Data End.");
+            return data;
         }
     }
 
@@ -130,10 +135,11 @@ namespace TryDecorator
             _dataSource.ReadData();
         }
 
-        public void WriteData(string data)
+        public string WriteData(string data)
         {
-            _dataSource.WriteData(data);
+            data = _dataSource.WriteData(data);
             Console.WriteLine($"Paycheck {data} sent.");
+            return data;
         }
     }
 }

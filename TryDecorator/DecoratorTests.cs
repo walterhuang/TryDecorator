@@ -44,20 +44,15 @@ namespace TryDecorator
             // Arrange
             var kernel = new StandardKernel();
             kernel.Bind<IDataSource>().To<EmailDecorator>();
-
             kernel.Bind<IDataSource>().To<LoggingDecorator>()
                 .WhenInjectedInto<EmailDecorator>();
-
             kernel.Bind<IDataSource>().To<EncryptionDecorator>()
                 .WhenInjectedInto<LoggingDecorator>();
-
             kernel.Bind<IDataSource>().To<CompressionDecorator>()
                 .WhenInjectedInto<EncryptionDecorator>();
-
             kernel.Bind<IDataSource>().To<FileDataSource>()
                 .WhenInjectedInto<CompressionDecorator>()
                 .WithConstructorArgument("filename", "somefile.dat");
-
             var target = kernel.Get<IDataSource>();
             string salaryRecords = "$199/mo";
 
